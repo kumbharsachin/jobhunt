@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login - JobHunt</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+  </head>
+  <body>
+
+    <!-- NAVBAR -->
+    <nav>
+      <div class="logo">🔍 JobHunt</div>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Browse Jobs</a></li>
+        <li><a href="#">Post a Job</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+
+    <!-- LOGIN & SIGNUP BOX -->
+    <div class="auth-container">
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('login')">Login</button>
+        <button class="tab" onclick="showTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login" class="form-box">
+        <h2>Welcome Back 👋</h2>
+        <p class="subtitle">Login to your JobHunt account</p>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter your email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password">
+        </div>
+
+        <button class="auth-btn" onclick="loginUser()">Login</button>
+
+        <p class="switch-text">Don't have an account?
+          <span onclick="showTab('signup')">Sign Up</span>
+        </p>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signup" class="form-box" style="display:none;">
+        <h2>Create Account 🚀</h2>
+        <p class="subtitle">Join thousands of job seekers</p>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signupEmail" placeholder="Enter your email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="Create a password">
+        </div>
+
+        <div class="form-group">
+          <label>I am a</label>
+          <select id="userType">
+            <option value="jobseeker">Job Seeker</option>
+            <option value="employer">Employer</option>
+          </select>
+        </div>
+
+        <button class="auth-btn" onclick="signupUser()">Create Account</button>
+
+        <p class="switch-text">Already have an account?
+          <span onclick="showTab('login')">Login</span>
+        </p>
+      </div>
+
+    </div>
+
+    <script src="login.js"></script>
+  </body>
+</html>

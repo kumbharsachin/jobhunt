@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Detail - JobHunt</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="job.css">
+  </head>
+  <body>
+
+    <!-- NAVBAR -->
+    <nav>
+      <div class="logo">🔍 JobHunt</div>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Browse Jobs</a></li>
+        <li><a href="#">Post a Job</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- JOB DETAIL -->
+    <div class="job-detail-container">
+
+      <div class="job-detail-left">
+        <div class="job-header">
+          <h1>Software Engineer</h1>
+          <p class="company-name">🏢 Google</p>
+          <div class="job-meta">
+            <span>📍 Bangalore</span>
+            <span>💰 ₹20 LPA</span>
+            <span>🕒 Full Time</span>
+            <span>📅 Posted 2 days ago</span>
+          </div>
+          <button class="apply-btn">Apply Now</button>
+        </div>
+
+        <div class="job-section">
+          <h2>Job Description</h2>
+          <p>We are looking for a talented Software Engineer to join our team in Bangalore.</p>
+        </div>
+
+        <div class="job-section">
+          <h2>Responsibilities</h2>
+          <ul>
+            <li>Design and develop high quality software</li>
+            <li>Collaborate with cross-functional teams</li>
+            <li>Write clean, maintainable code</li>
+            <li>Participate in code reviews</li>
+          </ul>
+        </div>
+
+        <div class="job-section">
+          <h2>Requirements</h2>
+          <ul>
+            <li>Bachelor's degree in Computer Science</li>
+            <li>2+ years of experience</li>
+            <li>Strong knowledge of JavaScript or Python</li>
+            <li>Good communication skills</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job-detail-right">
+        <div class="apply-card">
+          <h2>Apply for this Job</h2>
+          <p class="deadline">⏰ Deadline: 30 April 2025</p>
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter your name">
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="Enter your email">
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" placeholder="Enter your phone">
+          </div>
+
+          <div class="form-group">
+            <label>Upload Resume</label>
+            <input type="file" accept=".pdf,.doc,.docx">
+          </div>
+
+          <div class="form-group">
+            <label>Cover Letter (optional)</label>
+            <textarea placeholder="Why should we hire you?"></textarea>
+          </div>
+
+          <button class="submit-btn" onclick="submitApplication()">Submit Application</button>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="job.js"></script>
+  </body>
+</html>
