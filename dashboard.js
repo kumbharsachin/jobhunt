@@ -1,20 +1,5 @@
-// Firebase Setup
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { db, collection, addDoc, getDocs } from './firebase.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBecaPJy3fj-MhEcd0YnPyS40YviRem-J8",
-  authDomain: "jobhunt-49870.firebaseapp.com",
-  projectId: "jobhunt-49870",
-  storageBucket: "jobhunt-49870.firebasestorage.app",
-  messagingSenderId: "243315667702",
-  appId: "1:243315667702:web:a0d94de60a88345b9ff2d7"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Page Load
 window.onload = function() {
   let user = JSON.parse(localStorage.getItem('loggedInUser'));
   if (user) {
@@ -39,7 +24,6 @@ window.onload = function() {
   });
 }
 
-// Show Section
 function showSection(section) {
   let sections = ['postJob', 'myJobs', 'applications', 'stats'];
   sections.forEach(function(s) {
@@ -54,7 +38,6 @@ function showSection(section) {
   document.getElementById('tab-' + section).classList.add('active');
 }
 
-// Post Job
 async function postJob() {
   let title = document.getElementById('jobTitle').value;
   let company = document.getElementById('jobCompany').value;
@@ -92,11 +75,10 @@ async function postJob() {
     document.getElementById('jobReq').value = '';
 
   } catch(error) {
-    alert("❌ Error posting job: " + error.message);
+    alert("❌ Error: " + error.message);
   }
 }
 
-// Load My Jobs
 async function loadMyJobs() {
   let list = document.getElementById('myJobsList');
   list.innerHTML = '<p>Loading...</p>';
@@ -128,7 +110,6 @@ async function loadMyJobs() {
   }
 }
 
-// Load Stats
 async function loadStats() {
   try {
     const snapshot = await getDocs(collection(db, "jobs"));

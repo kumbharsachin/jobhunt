@@ -1,42 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-// Your Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyBecaPJy3fj-MhEcd0YnPyS40YviRem-J8",
-  authDomain: "jobhunt-49870.firebaseapp.com",
-  projectId: "jobhunt-49870",
-  storageBucket: "jobhunt-49870.firebasestorage.app",
-  messagingSenderId: "243315667702",
-  appId: "1:243315667702:web:a0d94de60a88345b9ff2d7"
+  apiKey: "AIzaSyD-dYNwBIo1aUryS7F6-gwIEJS5vq8xBt8",
+  authDomain: "jobhunt-6f406.firebaseapp.com",
+  projectId: "jobhunt-6f406",
+  storageBucket: "jobhunt-6f406.firebasestorage.app",
+  messagingSenderId: "166338331012",
+  appId: "1:166338331012:web:87618fa72d59812d911dd1"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Save Job to Firebase
-async function saveJob(job) {
-  try {
-    await addDoc(collection(db, "jobs"), job);
-    console.log("✅ Job saved!");
-  } catch (error) {
-    console.error("❌ Error:", error);
-  }
-}
-
-// Get All Jobs from Firebase
-async function getJobs() {
-  try {
-    const snapshot = await getDocs(collection(db, "jobs"));
-    let jobs = [];
-    snapshot.forEach(doc => {
-      jobs.push({ id: doc.id, ...doc.data() });
-    });
-    return jobs;
-  } catch (error) {
-    console.error("❌ Error:", error);
-  }
-}
-
-export { db, saveJob, getJobs };
+export { db, collection, addDoc, getDocs };
