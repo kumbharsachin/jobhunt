@@ -54,7 +54,7 @@ async function postJob() {
   }
 
   let options = {
-    key: rzp_test_SZnDOjNGcbyLJQ,
+    key: "rzp_test_SZnDOjNGcbyLJQ",  // no spaces
     amount: 99900,
     currency: "INR",
     name: "JobHunt",
