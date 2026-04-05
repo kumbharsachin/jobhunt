@@ -1,8 +1,21 @@
-// Import Firebase
-import { saveJob, getJobs } from './firebase.js';
+// Firebase Setup
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBecaPJy3fj-MhEcd0YnPyS40YviRem-J8",
+  authDomain: "jobhunt-49870.firebaseapp.com",
+  projectId: "jobhunt-49870",
+  storageBucket: "jobhunt-49870.firebasestorage.app",
+  messagingSenderId: "243315667702",
+  appId: "1:243315667702:web:a0d94de60a88345b9ff2d7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Page Load
 window.onload = function() {
-
   let user = JSON.parse(localStorage.getItem('loggedInUser'));
   if (user) {
     document.getElementById('companyName').innerText = user.name;
@@ -26,6 +39,7 @@ window.onload = function() {
   });
 }
 
+// Show Section
 function showSection(section) {
   let sections = ['postJob', 'myJobs', 'applications', 'stats'];
   sections.forEach(function(s) {
@@ -40,7 +54,7 @@ function showSection(section) {
   document.getElementById('tab-' + section).classList.add('active');
 }
 
-// Post a Job
+// Post Job
 async function postJob() {
   let title = document.getElementById('jobTitle').value;
   let company = document.getElementById('jobCompany').value;
@@ -56,63 +70,70 @@ async function postJob() {
     return;
   }
 
-  let job = {
-    title: title,
-    company: company,
-    location: location,
-    salary: salary,
-    type: type,
-    exp: exp,
-    desc: desc,
-    req: req,
-    date: new Date().toLocaleDateString()
-  };
+  try {
+    await addDoc(collection(db, "jobs"), {
+      title: title,
+      company: company,
+      location: location,
+      salary: salary,
+      type: type,
+      exp: exp,
+      desc: desc,
+      req: req,
+      date: new Date().toLocaleDateString()
+    });
+    alert("✅ Job posted successfully!");
 
-  // Save to Firebase
-  await saveJob(job);
+    document.getElementById('jobTitle').value = '';
+    document.getElementById('jobCompany').value = '';
+    document.getElementById('jobLocation').value = '';
+    document.getElementById('jobSalary').value = '';
+    document.getElementById('jobDesc').value = '';
+    document.getElementById('jobReq').value = '';
 
-  // Save to localStorage too
-  let jobs = JSON.parse(localStorage.getItem('postedJobs')) || [];
-  jobs.push(job);
-  localStorage.setItem('postedJobs', JSON.stringify(jobs));
-
-  alert("✅ Job posted successfully!");
-
-  document.getElementById('jobTitle').value = '';
-  document.getElementById('jobCompany').value = '';
-  document.getElementById('jobLocation').value = '';
-  document.getElementById('jobSalary').value = '';
-  document.getElementById('jobDesc').value = '';
-  document.getElementById('jobReq').value = '';
+  } catch(error) {
+    alert("❌ Error posting job: " + error.message);
+  }
 }
 
 // Load My Jobs
 async function loadMyJobs() {
   let list = document.getElementById('myJobsList');
-  list.innerHTML = '<p>Loading jobs...</p>';
+  list.innerHTML = '<p>Loading...</p>';
 
-  // Get jobs from Firebase
-  let jobs = await getJobs();
+  try {
+    const snapshot = await getDocs(collection(db, "jobs"));
+    let jobs = [];
+    snapshot.forEach(doc => {
+      jobs.push({ id: doc.id, ...doc.data() });
+    });
 
-  if (!jobs || jobs.length === 0) {
-    list.innerHTML = '<div class="empty-box"><p>📭 No jobs posted yet.</p></div>';
-    return;
+    if (jobs.length === 0) {
+      list.innerHTML = '<div class="empty-box"><p>📭 No jobs posted yet.</p></div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    jobs.forEach(function(job) {
+      list.innerHTML += '<div class="job-post-card">' +
+        '<div>' +
+        '<h3>' + job.title + '</h3>' +
+        '<p>🏢 ' + job.company + ' | 📍 ' + job.location + ' | 💰 ' + job.salary + '</p>' +
+        '<p>📅 Posted on ' + job.date + '</p>' +
+        '</div>' +
+        '</div>';
+    });
+  } catch(error) {
+    list.innerHTML = '<p>❌ Error loading jobs</p>';
   }
-
-  list.innerHTML = '';
-  jobs.forEach(function(job, index) {
-    list.innerHTML += '<div class="job-post-card">' +
-      '<div>' +
-      '<h3>' + job.title + '</h3>' +
-      '<p>🏢 ' + job.company + ' | 📍 ' + job.location + ' | 💰 ' + job.salary + ' | 🕒 ' + job.type + '</p>' +
-      '<p>📅 Posted on ' + job.date + '</p>' +
-      '</div>' +
-      '</div>';
-  });
 }
 
 // Load Stats
 async function loadStats() {
-  let jobs = await getJobs();
-  document.getElementById('totalJobs').innerText = jobs ? jobs.length : 0;
+  try {
+    const snapshot = await getDocs(collection(db, "jobs"));
+    document.getElementById('totalJobs').innerText = snapshot.size;
+  } catch(error) {
+    console.error(error);
+  }
 }
