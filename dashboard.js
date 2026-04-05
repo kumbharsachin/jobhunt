@@ -53,30 +53,51 @@ async function postJob() {
     return;
   }
 
-  try {
-    await addDoc(collection(db, "jobs"), {
-      title: title,
-      company: company,
-      location: location,
-      salary: salary,
-      type: type,
-      exp: exp,
-      desc: desc,
-      req: req,
-      date: new Date().toLocaleDateString()
-    });
-    alert("✅ Job posted successfully!");
+  let options = {
+    key: rzp_test_SZnDOjNGcbyLJQ,
+    amount: 99900,
+    currency: "INR",
+    name: "JobHunt",
+    description: "Job Posting Fee ₹999",
+    handler: async function(response) {
+      try {
+        await addDoc(collection(db, "jobs"), {
+          title: title,
+          company: company,
+          location: location,
+          salary: salary,
+          type: type,
+          exp: exp,
+          desc: desc,
+          req: req,
+          date: new Date().toLocaleDateString(),
+          paymentId: response.razorpay_payment_id
+        });
 
-    document.getElementById('jobTitle').value = '';
-    document.getElementById('jobCompany').value = '';
-    document.getElementById('jobLocation').value = '';
-    document.getElementById('jobSalary').value = '';
-    document.getElementById('jobDesc').value = '';
-    document.getElementById('jobReq').value = '';
+        alert("✅ Payment successful! Job posted!");
 
-  } catch(error) {
-    alert("❌ Error: " + error.message);
-  }
+        document.getElementById('jobTitle').value = '';
+        document.getElementById('jobCompany').value = '';
+        document.getElementById('jobLocation').value = '';
+        document.getElementById('jobSalary').value = '';
+        document.getElementById('jobDesc').value = '';
+        document.getElementById('jobReq').value = '';
+
+      } catch(error) {
+        alert("❌ Error: " + error.message);
+      }
+    },
+    prefill: {
+      name: "Employer",
+      email: "employer@example.com"
+    },
+    theme: {
+      color: "#3498db"
+    }
+  };
+
+  let rzp = new Razorpay(options);
+  rzp.open();
 }
 
 async function loadMyJobs() {
