@@ -217,3 +217,40 @@
   font-size: 16px;
   line-height: 2;
 }
+/* ===== MOBILE FRIENDLY ===== */
+@media (max-width: 768px) {
+
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+  }
+
+  .sidebar-menu li {
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    flex-direction: column;
+  }
+
+}

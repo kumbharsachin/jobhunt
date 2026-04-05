@@ -104,3 +104,15 @@
 .switch-text span:hover {
   text-decoration: underline;
 }
+/* ===== MOBILE FRIENDLY ===== */
+@media (max-width: 768px) {
+
+  .auth-container {
+    margin: 20px;
+  }
+
+  .form-box {
+    padding: 20px;
+  }
+
+}
