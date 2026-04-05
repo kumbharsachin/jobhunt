@@ -95,8 +95,7 @@ async function postJob() {
       color: "#3498db"
     }
   };
-
-  let rzp = new Razorpay(options);
+let rzp = new window.Razorpay(options);
   rzp.open();
 }
 
