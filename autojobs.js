@@ -3,11 +3,25 @@ import { db, collection, addDoc, getDocs } from './firebase.js';
 // Your RapidAPI Key
 const RAPIDAPI_KEY = "bd72922905msh21c00cd25cd5246p1fceddjsn00598acd436f";
 
-// Fetch jobs from JSearch API
-async function fetchJobsFromAPI() {
+// Different job searches
+const JOB_SEARCHES = [
+  "software engineer india",
+  "data analyst india",
+  "UI UX designer india",
+  "marketing manager india",
+  "sales executive india",
+  "product manager india",
+  "web developer india",
+  "business analyst india",
+  "HR manager india",
+  "content writer india"
+];
+
+// Fetch jobs for one search query
+async function fetchJobsByQuery(query, page) {
   try {
     const response = await fetch(
-      "https://jsearch.p.rapidapi.com/search?query=software+engineer+india&page=1&num_pages=1",
+      `https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query)}&page=${page}&num_pages=1`,
       {
         method: "GET",
         headers: {
@@ -16,10 +30,8 @@ async function fetchJobsFromAPI() {
         }
       }
     );
-
     const data = await response.json();
     return data.data || [];
-
   } catch(error) {
     console.error("Error fetching jobs:", error);
     return [];
@@ -58,9 +70,9 @@ async function saveJobsToFirebase(jobs) {
       });
 
       newJobsCount++;
+      existingIds.push(job.job_id);
     }
 
-    console.log("✅ Added " + newJobsCount + " new jobs!");
     return newJobsCount;
 
   } catch(error) {
@@ -69,16 +81,29 @@ async function saveJobsToFirebase(jobs) {
   }
 }
 
-// Main function
+// Main function — fetch all job types
 async function autoPostJobs() {
   console.log("🤖 Auto posting jobs...");
-  let jobs = await fetchJobsFromAPI();
-  if (jobs.length > 0) {
-    let count = await saveJobsToFirebase(jobs);
-    alert("✅ Auto posted " + count + " new jobs!");
-  } else {
-    alert("⚠️ No new jobs found!");
+  let totalJobs = 0;
+
+  for (let query of JOB_SEARCHES) {
+    console.log("Fetching: " + query);
+
+    // Get 2 pages per search = 20 jobs per category
+    for (let page = 1; page <= 2; page++) {
+      let jobs = await fetchJobsByQuery(query, page);
+      if (jobs.length > 0) {
+        let count = await saveJobsToFirebase(jobs);
+        totalJobs += count;
+      }
+
+      // Wait 1 second between requests
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
   }
+
+  console.log("✅ Total new jobs added: " + totalJobs);
+  alert("✅ Auto posted " + totalJobs + " new jobs!");
 }
 
 export { autoPostJobs };
