@@ -1,7 +1,7 @@
 import { db, collection, addDoc, getDocs } from './firebase.js';
 
 // Your RapidAPI Key
-const RAPIDAPI_KEY = "YOUR_RAPIDAPI_KEY_HERE";
+const RAPIDAPI_KEY = "bd72922905msh21c00cd25cd5246p1fceddjsn00598acd436f";
 
 // Fetch jobs from JSearch API
 async function fetchJobsFromAPI() {
@@ -11,7 +11,7 @@ async function fetchJobsFromAPI() {
       {
         method: "GET",
         headers: {
-          "X-RapidAPI-Key":bd72922905msh21c00cd25cd5246p1fceddjsn00598acd436f,
+          "X-RapidAPI-Key": RAPIDAPI_KEY,
           "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
         }
       }
@@ -29,7 +29,6 @@ async function fetchJobsFromAPI() {
 // Save jobs to Firebase
 async function saveJobsToFirebase(jobs) {
   try {
-    // Get existing jobs to avoid duplicates
     const snapshot = await getDocs(collection(db, "jobs"));
     let existingIds = [];
     snapshot.forEach(doc => {
@@ -41,7 +40,6 @@ async function saveJobsToFirebase(jobs) {
     let newJobsCount = 0;
 
     for (let job of jobs) {
-      // Skip if already saved
       if (existingIds.includes(job.job_id)) continue;
 
       await addDoc(collection(db, "jobs"), {
@@ -71,7 +69,7 @@ async function saveJobsToFirebase(jobs) {
   }
 }
 
-// Main function — fetch and save jobs
+// Main function
 async function autoPostJobs() {
   console.log("🤖 Auto posting jobs...");
   let jobs = await fetchJobsFromAPI();
