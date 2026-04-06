@@ -50,7 +50,14 @@ async function loadJobsFromFirebase() {
   }
 }
 
+// Make functions available globally
+window.filterJobs = filterJobs;
+window.autoPostJobs = autoPostJobs;
+
 // Load jobs when page opens
 window.onload = function() {
   loadJobsFromFirebase();
+
+  // Auto post jobs every time page loads
+  autoPostJobs();
 }
