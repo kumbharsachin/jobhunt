@@ -1,3 +1,6 @@
+import { autoPostJobs } from './autojobs.js';
+import { db, collection, getDocs } from './firebase.js';
+
 // Filter jobs
 function filterJobs() {
   let input = document.getElementById("searchInput").value.toLowerCase();
@@ -12,42 +15,42 @@ function filterJobs() {
   });
 }
 
-// Load real jobs from RemoteOK API
-function loadRealJobs() {
+// Load jobs from Firebase
+async function loadJobsFromFirebase() {
   let container = document.getElementById("jobList");
+  container.innerHTML = '<p style="text-align:center; padding:20px;">Loading jobs...</p>';
 
-  fetch("https://remoteok.com/api")
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-      // Remove first item (it's not a job)
-      data.shift();
-
-      // Show first 10 jobs
-      let jobs = data.slice(0, 10);
-
-      // Clear existing cards
-      container.innerHTML = '';
-
-      jobs.forEach(function(job) {
-        container.innerHTML += `
-          <div class="job-card">
-            <h2>${job.position}</h2>
-            <p class="company">🏢 ${job.company}</p>
-            <p>📍 Remote | 💰 ${job.salary ? job.salary : 'Not specified'}</p>
-            <p class="tag">Remote</p>
-            <button onclick="window.open('${job.url}', '_blank')">Apply Now</button>
-          </div>
-        `;
-      });
-    })
-    .catch(function(error) {
-      console.log("API error:", error);
+  try {
+    const snapshot = await getDocs(collection(db, "jobs"));
+    let jobs = [];
+    snapshot.forEach(doc => {
+      jobs.push({ id: doc.id, ...doc.data() });
     });
+
+    if (jobs.length === 0) {
+      container.innerHTML = '<p style="text-align:center;">No jobs yet!</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    jobs.forEach(function(job) {
+      container.innerHTML += `
+        <div class="job-card">
+          <h2>${job.title}</h2>
+          <p class="company">🏢 ${job.company}</p>
+          <p>📍 ${job.location} | 💰 ${job.salary}</p>
+          <p class="tag">${job.type}</p>
+          <button onclick="window.open('${job.url || 'job.html'}', '_blank')">Apply Now</button>
+        </div>
+      `;
+    });
+
+  } catch(error) {
+    container.innerHTML = '<p>❌ Error loading jobs</p>';
+  }
 }
 
 // Load jobs when page opens
 window.onload = function() {
-  loadRealJobs();
+  loadJobsFromFirebase();
 }
